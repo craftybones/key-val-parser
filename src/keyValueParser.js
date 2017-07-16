@@ -1,33 +1,67 @@
+var ParseInfo=require('./parseInfo.js');
+
 var isWhiteSpace=function(character) {
-  return character==" "||character=="\t";
+  return character.match(/\s/);
+}
+
+var isAlphanumeric=function(character) {
+  var r=RegExp(/\w/);
+  return character.match(r);
+}
+
+var parseValueWithoutQuotes=function(parseInfo,currentChar) {
+  if(isWhiteSpace(currentChar)) {
+    parseInfo.pushKeyValuePair();
+    parseInfo.nextFunction=ignoreLeadingWhiteSpace;
+    return parseInfo;
+  }
+  parseInfo.currentValue+=currentChar;
+  return parseInfo;
+}
+
+var parseValue=function(parseInfo,currentChar) {
+  if(isWhiteSpace(currentChar))
+    return parseInfo;
+  if(isAlphanumeric(currentChar)) {
+    parseInfo.currentValue+=currentChar;
+    parseInfo.nextFunction=parseValueWithoutQuotes;
+    return parseInfo;
+  }
+}
+
+var parseKey=function(parseInfo,currentChar) {
+  if(isAlphanumeric(currentChar)) {
+    parseInfo.currentToken+=currentChar;
+    return parseInfo;
+  }
+  if(isWhiteSpace(currentChar))
+    return parseInfo;
+  if(currentChar=="=") {
+    parseInfo.currentKey=parseInfo.currentToken;
+    parseInfo.currentToken="";
+    parseInfo.nextFunction=parseValue;
+    return parseInfo;
+  } // throw error otherwise
+}
+
+var ignoreLeadingWhiteSpace=function(parseInfo,currentChar) {
+  if(isWhiteSpace(currentChar))
+    return parseInfo;
+  if(isAlphanumeric(currentChar)) {
+    parseInfo.currentToken+=currentChar;
+    parseInfo.nextFunction=parseKey;
+  } // else throw error
+  return parseInfo;
 }
 
 var parser=function(text) {
-  var tokens=[]
-  var i=0;
-  var currentToken="";
-  while(i<text.length) {
-    currentChar=text[i];
-    if(currentChar=="=") {
-      tokens.push(currentToken);
-      currentToken="";
-    } else {
-      if(isWhiteSpace(currentChar)) {
-        tokens.push(currentToken);
-        currentToken="";
-      } else {
-        currentToken+=currentChar;
-      }
-    }
-    i++;
+  parseInfo=new ParseInfo(ignoreLeadingWhiteSpace);
+  for (var i = 0; i < text.length; i++) {
+    parseInfo=parseInfo.nextFunction(parseInfo,text[i]);
   }
-  tokens.push(currentToken);
-  // raise error if(tokens.length%2!=0)
-  var parsed={keys:{},numberOfKeys:0};
-  for (var i = 0; i < tokens.length; i+=2) {
-    parsed.keys[tokens[i]]=tokens[i+1];
-    parsed.numberOfKeys++;
-  }
+  parseInfo.endOfText();
+  var length=Object.keys(parseInfo.keys).length;
+  var parsed={keys:parseInfo.keys,numberOfKeys:length};
   return parsed;
 }
 
