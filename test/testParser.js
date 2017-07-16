@@ -88,4 +88,17 @@ describe("multiple values with quotes",function(){
     var expected={numberOfKeys:2,keys:{key:"va lue",anotherkey:"another value"}};
     assert.deepEqual(expected,kvParser("key= \"va lue\" anotherkey= \"another value\""));
   });
+
+  it("should parse more than one value with quotes when keys have trailing spaces",function(){
+    var expected={numberOfKeys:2,keys:{key:"va lue",anotherkey:"another value"}};
+    assert.deepEqual(expected,kvParser("key = \"va lue\" anotherkey = \"another value\""));
+  });
+});
+
+
+describe("mixed values with both quotes and without",function(){
+  it("should parse simple values with and without quotes",function(){
+    var expected={numberOfKeys:2,keys:{key:"value",anotherkey:"anothervalue"}};
+    assert.deepEqual(expected,kvParser("key=value anotherkey=\"anothervalue\""));
+  });
 });
