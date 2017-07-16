@@ -9,6 +9,16 @@ var isAlphanumeric=function(character) {
   return character.match(r);
 }
 
+var parseValueWithQuotes=function(parseInfo,currentChar) {
+  if(currentChar.match(/"/)) {
+    parseInfo.pushKeyValuePair();
+    parseInfo.nextFunction=ignoreLeadingWhiteSpace;
+    return parseInfo;
+  }
+  parseInfo.currentValue+=currentChar;
+  return parseInfo;
+}
+
 var parseValueWithoutQuotes=function(parseInfo,currentChar) {
   if(isWhiteSpace(currentChar)) {
     parseInfo.pushKeyValuePair();
@@ -25,6 +35,10 @@ var parseValue=function(parseInfo,currentChar) {
   if(isAlphanumeric(currentChar)) {
     parseInfo.currentValue+=currentChar;
     parseInfo.nextFunction=parseValueWithoutQuotes;
+    return parseInfo;
+  }
+  if(currentChar.match(/"/)) {
+    parseInfo.nextFunction=parseValueWithQuotes;
     return parseInfo;
   }
 }

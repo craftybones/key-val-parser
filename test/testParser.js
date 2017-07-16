@@ -55,3 +55,16 @@ describe("multiple keys",function(){
     assert.deepEqual(expected,kvParser("  key  =value anotherkey  =anothervalue"));
   });
 });
+
+describe("values with quotes",function(){
+  it("should parse a single value with quotes",function(){
+    var expected={numberOfKeys:1,keys:{key:"value"}};
+    assert.deepEqual(expected,kvParser("key=\"value\""));
+  });
+
+  it("should parse a single quoted value that has spaces in it",function(){
+    var expected={numberOfKeys:1,keys:{key:"va lue"}};
+    assert.deepEqual(expected,kvParser("key=\"va lue\""));
+  });
+
+});
