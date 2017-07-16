@@ -56,7 +56,7 @@ describe("multiple keys",function(){
   });
 });
 
-describe("values with quotes",function(){
+describe("single values with quotes",function(){
   it("should parse a single value with quotes",function(){
     var expected={numberOfKeys:1,keys:{key:"value"}};
     assert.deepEqual(expected,kvParser("key=\"value\""));
@@ -67,4 +67,25 @@ describe("values with quotes",function(){
     assert.deepEqual(expected,kvParser("key=\"va lue\""));
   });
 
+  it("should parse a single quoted value that has spaces in it and leading spaces",function(){
+    var expected={numberOfKeys:1,keys:{key:"va lue"}};
+    assert.deepEqual(expected,kvParser("key=   \"va lue\""));
+  });
+
+  it("should parse a single quoted value that has spaces in it and trailing spaces",function(){
+    var expected={numberOfKeys:1,keys:{key:"va lue"}};
+    assert.deepEqual(expected,kvParser("key=\"va lue\"   "));
+  });
+});
+
+describe("multiple values with quotes",function(){
+  it("should parse more than one value with quotes",function(){
+    var expected={numberOfKeys:2,keys:{key:"va lue",anotherkey:"another value"}};
+    assert.deepEqual(expected,kvParser("key=\"va lue\" anotherkey=\"another value\""));
+  });
+
+  it("should parse more than one value with quotes with leading spaces",function(){
+    var expected={numberOfKeys:2,keys:{key:"va lue",anotherkey:"another value"}};
+    assert.deepEqual(expected,kvParser("key= \"va lue\" anotherkey= \"another value\""));
+  });
 });
