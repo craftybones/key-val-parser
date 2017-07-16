@@ -1,3 +1,5 @@
 * Add tests for characters other than lower-case alphabets
 * Add support for quoted slashes in values that are quoted
   - ex: name="value with \"quotes\""
+* Allow users to specify valid keys and raise errors on invalid keys.
+* Error handling on invalid formats, missing values, keys etc
