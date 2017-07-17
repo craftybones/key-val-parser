@@ -1,4 +1,4 @@
-var ParseInfo=function() {
+var Parser=function() {
   this.currentToken="";
   this.currentKey="";
   this.currentValue="";
@@ -6,12 +6,21 @@ var ParseInfo=function() {
   this.nextFunction=this.ignoreLeadingWhiteSpace;
 }
 
-ParseInfo.prototype = {
+Parser.prototype = {
+  parse:function(text) {
+    for (var i = 0; i < text.length; i++) {
+      Parser=this.nextFunction(text[i]);
+    }
+    Parser.endOfText();
+    var length=Object.keys(Parser.keys).length;
+    var parsed={keys:Parser.keys,numberOfKeys:length};
+    return parsed;
+  },
   pushKeyValuePair:function() {
     this.keys[this.currentKey]=this.currentValue;
     this.currentKey=this.currentValue="";
   },
-  parseKey:function(foo,currentChar) {
+  parseKey:function(currentChar) {
     if(isAlphanumeric(currentChar)) {
       this.currentToken+=currentChar;
       return this;
@@ -25,7 +34,7 @@ ParseInfo.prototype = {
       return this;
     } // throw error otherwise
   },
-  parseValue:function(foo,currentChar) {
+  parseValue:function(currentChar) {
     if(isWhiteSpace(currentChar))
       return this;
     if(isAlphanumeric(currentChar)) {
@@ -38,7 +47,7 @@ ParseInfo.prototype = {
       return this;
     }
   },
-  parseValueWithQuotes:function(foo,currentChar) {
+  parseValueWithQuotes:function(currentChar) {
     if(isQuote(currentChar)) {
       this.pushKeyValuePair();
       this.nextFunction=this.ignoreLeadingWhiteSpace;
@@ -47,7 +56,7 @@ ParseInfo.prototype = {
     this.currentValue+=currentChar;
     return this;
   },
-  parseValueWithoutQuotes:function(foo,currentChar) {
+  parseValueWithoutQuotes:function(currentChar) {
     if(isWhiteSpace(currentChar)) {
       this.pushKeyValuePair();
       this.nextFunction=this.ignoreLeadingWhiteSpace;
@@ -56,7 +65,7 @@ ParseInfo.prototype = {
     this.currentValue+=currentChar;
     return this;
   },
-  ignoreLeadingWhiteSpace:function(foo,currentChar) {
+  ignoreLeadingWhiteSpace:function(currentChar) {
     if(isWhiteSpace(currentChar))
       return this;
     if(isAlphanumeric(currentChar)) {
@@ -93,15 +102,4 @@ var isEqualsCharacter=function(character) {
   return character=="=";
 }
 
-var parser=function(text) {
-  parseInfo=new ParseInfo();
-  for (var i = 0; i < text.length; i++) {
-    parseInfo=parseInfo.nextFunction(parseInfo,text[i]);
-  }
-  parseInfo.endOfText();
-  var length=Object.keys(parseInfo.keys).length;
-  var parsed={keys:parseInfo.keys,numberOfKeys:length};
-  return parsed;
-}
-
-module.exports=parser;
+module.exports=Parser;
