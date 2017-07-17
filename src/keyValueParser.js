@@ -9,8 +9,12 @@ var isAlphanumeric=function(character) {
   return character.match(r);
 }
 
+var isQuote=function(character) {
+  return character.match(/"/);
+}
+
 var parseValueWithQuotes=function(parseInfo,currentChar) {
-  if(currentChar.match(/"/)) {
+  if(isQuote(currentChar)) {
     parseInfo.pushKeyValuePair();
     parseInfo.nextFunction=ignoreLeadingWhiteSpace;
     return parseInfo;
@@ -37,7 +41,7 @@ var parseValue=function(parseInfo,currentChar) {
     parseInfo.nextFunction=parseValueWithoutQuotes;
     return parseInfo;
   }
-  if(currentChar.match(/"/)) {
+  if(isQuote(currentChar)) {
     parseInfo.nextFunction=parseValueWithQuotes;
     return parseInfo;
   }
