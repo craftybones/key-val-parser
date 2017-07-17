@@ -1,4 +1,82 @@
-var ParseInfo=require('./parseInfo.js');
+// var ParseInfo=require('./parseInfo.js');
+
+var ParseInfo=function() {
+  this.currentToken="";
+  this.currentKey="";
+  this.currentValue="";
+  this.keys={};
+  this.nextFunction=this.ignoreLeadingWhiteSpace;
+}
+
+ParseInfo.prototype = {
+  pushKeyValuePair:function() {
+    this.keys[this.currentKey]=this.currentValue;
+    this.currentKey=this.currentValue="";
+  },
+  parseKey:function(foo,currentChar) {
+    if(isAlphanumeric(currentChar)) {
+      this.currentToken+=currentChar;
+      return this;
+    }
+    if(isWhiteSpace(currentChar))
+      return this;
+    if(isEqualsCharacter(currentChar)) {
+      this.currentKey=this.currentToken;
+      this.currentToken="";
+      this.nextFunction=this.parseValue;
+      return this;
+    } // throw error otherwise
+  },
+  parseValue:function(foo,currentChar) {
+    if(isWhiteSpace(currentChar))
+      return this;
+    if(isAlphanumeric(currentChar)) {
+      this.currentValue+=currentChar;
+      this.nextFunction=this.parseValueWithoutQuotes;
+      return this;
+    }
+    if(isQuote(currentChar)) {
+      this.nextFunction=this.parseValueWithQuotes;
+      return this;
+    }
+  },
+  parseValueWithQuotes:function(foo,currentChar) {
+    if(isQuote(currentChar)) {
+      this.pushKeyValuePair();
+      this.nextFunction=this.ignoreLeadingWhiteSpace;
+      return this;
+    }
+    this.currentValue+=currentChar;
+    return this;
+  },
+  parseValueWithoutQuotes:function(foo,currentChar) {
+    if(isWhiteSpace(currentChar)) {
+      this.pushKeyValuePair();
+      this.nextFunction=this.ignoreLeadingWhiteSpace;
+      return this;
+    }
+    this.currentValue+=currentChar;
+    return this;
+  },
+  ignoreLeadingWhiteSpace:function(foo,currentChar) {
+    if(isWhiteSpace(currentChar))
+      return this;
+    if(isAlphanumeric(currentChar)) {
+      this.currentToken+=currentChar;
+      this.nextFunction=this.parseKey;
+    } // else throw error
+    return this;
+  },
+  endOfText:function() {
+    if(this.currentValue!="") {
+      if(this.currentKey!="")
+        this.pushKeyValuePair();
+      else {
+        //raise error
+      }
+    }
+  }
+}
 
 var isWhiteSpace=function(character) {
   return character.match(/\s/);
@@ -13,67 +91,12 @@ var isQuote=function(character) {
   return character.match(/"/);
 }
 
-var parseValueWithQuotes=function(parseInfo,currentChar) {
-  if(isQuote(currentChar)) {
-    parseInfo.pushKeyValuePair();
-    parseInfo.nextFunction=ignoreLeadingWhiteSpace;
-    return parseInfo;
-  }
-  parseInfo.currentValue+=currentChar;
-  return parseInfo;
-}
-
-var parseValueWithoutQuotes=function(parseInfo,currentChar) {
-  if(isWhiteSpace(currentChar)) {
-    parseInfo.pushKeyValuePair();
-    parseInfo.nextFunction=ignoreLeadingWhiteSpace;
-    return parseInfo;
-  }
-  parseInfo.currentValue+=currentChar;
-  return parseInfo;
-}
-
-var parseValue=function(parseInfo,currentChar) {
-  if(isWhiteSpace(currentChar))
-    return parseInfo;
-  if(isAlphanumeric(currentChar)) {
-    parseInfo.currentValue+=currentChar;
-    parseInfo.nextFunction=parseValueWithoutQuotes;
-    return parseInfo;
-  }
-  if(isQuote(currentChar)) {
-    parseInfo.nextFunction=parseValueWithQuotes;
-    return parseInfo;
-  }
-}
-
-var parseKey=function(parseInfo,currentChar) {
-  if(isAlphanumeric(currentChar)) {
-    parseInfo.currentToken+=currentChar;
-    return parseInfo;
-  }
-  if(isWhiteSpace(currentChar))
-    return parseInfo;
-  if(currentChar=="=") {
-    parseInfo.currentKey=parseInfo.currentToken;
-    parseInfo.currentToken="";
-    parseInfo.nextFunction=parseValue;
-    return parseInfo;
-  } // throw error otherwise
-}
-
-var ignoreLeadingWhiteSpace=function(parseInfo,currentChar) {
-  if(isWhiteSpace(currentChar))
-    return parseInfo;
-  if(isAlphanumeric(currentChar)) {
-    parseInfo.currentToken+=currentChar;
-    parseInfo.nextFunction=parseKey;
-  } // else throw error
-  return parseInfo;
+var isEqualsCharacter=function(character) {
+  return character=="=";
 }
 
 var parser=function(text) {
-  parseInfo=new ParseInfo(ignoreLeadingWhiteSpace);
+  parseInfo=new ParseInfo();
   for (var i = 0; i < text.length; i++) {
     parseInfo=parseInfo.nextFunction(parseInfo,text[i]);
   }

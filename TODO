@@ -5,3 +5,4 @@
 * Error handling on invalid formats, missing values, keys etc
 * Add a README
 * ADD Examples
+* Refactor parser to be a more self-contained object instead of passing parseInfo
