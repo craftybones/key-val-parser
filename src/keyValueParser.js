@@ -1,5 +1,3 @@
-// var ParseInfo=require('./parseInfo.js');
-
 var ParseInfo=function() {
   this.currentToken="";
   this.currentKey="";
