@@ -40,6 +40,43 @@ describe("parse basic key values",function(){
   });
 });
 
+describe("parse digits and other special chars",function(){
+  beforeEach(function(){
+    kvParser=new Parser();
+  });
+
+  it("parse keys with a single digit",function(){
+    var expected={numberOfKeys:1,keys:{'1':"value"}};
+    assert.deepEqual(expected,kvParser.parse("1=value"));
+  });
+
+  it("parse keys with only multiple digits",function(){
+    var expected={numberOfKeys:1,keys:{'123':"value"}};
+    assert.deepEqual(expected,kvParser.parse("123=value"));
+  });
+
+  it("parse keys with leading 0s",function(){
+    var expected={numberOfKeys:1,keys:{'0123':"value"}};
+    assert.deepEqual(expected,kvParser.parse("0123=value"));
+  });
+
+  it("parse keys with underscores",function(){
+    var expected={numberOfKeys:1,keys:{'first_name':"value"}};
+    assert.deepEqual(expected,kvParser.parse("first_name=value"));
+  });
+
+  it("parse keys with a single underscore",function(){
+    var expected={numberOfKeys:1,keys:{'_':"value"}};
+    assert.deepEqual(expected,kvParser.parse("_=value"));
+  });
+
+  it("parse keys with multiple underscores",function(){
+    var expected={numberOfKeys:1,keys:{'__':"value"}};
+    assert.deepEqual(expected,kvParser.parse("__=value"));
+  });
+
+});
+
 describe("multiple keys",function(){
   beforeEach(function(){
     kvParser=new Parser();

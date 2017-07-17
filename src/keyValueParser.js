@@ -1,13 +1,14 @@
 var Parser=function() {
-  this.currentToken="";
-  this.currentKey="";
-  this.currentValue="";
-  this.parsedKeys={};
-  this.nextFunction=this.ignoreLeadingWhiteSpace;
 }
 
 Parser.prototype = {
   parse:function(text) {
+    this.currentToken="";
+    this.currentKey="";
+    this.currentValue="";
+    this.parsedKeys={};
+    this.nextFunction=this.ignoreLeadingWhiteSpace;
+    
     for (var i = 0; i < text.length; i++) {
       this.nextFunction(text[i]);
     }
