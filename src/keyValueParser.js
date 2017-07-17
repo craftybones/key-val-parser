@@ -2,22 +2,22 @@ var Parser=function() {
   this.currentToken="";
   this.currentKey="";
   this.currentValue="";
-  this.keys={};
+  this.parsedKeys={};
   this.nextFunction=this.ignoreLeadingWhiteSpace;
 }
 
 Parser.prototype = {
   parse:function(text) {
     for (var i = 0; i < text.length; i++) {
-      Parser=this.nextFunction(text[i]);
+      this.nextFunction(text[i]);
     }
-    Parser.endOfText();
-    var length=Object.keys(Parser.keys).length;
-    var parsed={keys:Parser.keys,numberOfKeys:length};
+    this.endOfText();
+    var length=Object.keys(this.parsedKeys).length;
+    var parsed={keys:this.parsedKeys,numberOfKeys:length};
     return parsed;
   },
   pushKeyValuePair:function() {
-    this.keys[this.currentKey]=this.currentValue;
+    this.parsedKeys[this.currentKey]=this.currentValue;
     this.currentKey=this.currentValue="";
   },
   parseKey:function(currentChar) {
