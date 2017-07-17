@@ -3,3 +3,5 @@
   - ex: name="value with \"quotes\""
 * Allow users to specify valid keys and raise errors on invalid keys.
 * Error handling on invalid formats, missing values, keys etc
+* Add a README
+* ADD Examples
