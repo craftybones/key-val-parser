@@ -9,6 +9,11 @@ describe("parse basic key values",function(){
     kvParser=new Parser();
   });
 
+  it("parses an empty string",function(){
+    var expected={numberOfKeys:0,keys:{}};
+    assert.deepEqual(expected,kvParser.parse(""));
+  });
+  
   it("parse key=value",function(){
     var expected={numberOfKeys:1,keys:{key:"value"}};
     assert.deepEqual(expected,kvParser.parse("key=value"));
