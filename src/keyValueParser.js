@@ -1,89 +1,104 @@
+var ParseInfo=function(initialParsingFunction) {
+    this.currentToken="";
+    this.currentKey="";
+    this.currentValue="";
+    this.parsedKeys={};
+    this.nextFunction=initialParsingFunction;
+}
+
+ParseInfo.prototype.resetKeysAndValues=function() {
+  this.currentKey=this.currentValue=this.currentToken="";
+}
+
+ParseInfo.prototype.pushKeyValuePair=function() {
+  this.parsedKeys[this.currentKey]=this.currentValue;
+  this.resetKeysAndValues();
+}
+
+ParseInfo.prototype.endOfText=function() {
+  if(this.currentValue!="") {
+    if(this.currentKey!="")
+      this.pushKeyValuePair();
+    else {
+      //raise error
+    }
+  }
+}
+
+ParseInfo.prototype.parsed=function() {
+    var length=Object.keys(this.parsedKeys).length;
+    return {keys:this.parsedKeys,numberOfKeys:length};
+}
+
 var Parser=function() {
 }
 
 Parser.prototype = {
   parse:function(text) {
-    this.currentToken="";
-    this.currentKey="";
-    this.currentValue="";
-    this.parsedKeys={};
-    this.nextFunction=this.ignoreLeadingWhiteSpace;
-    
+    var parseInfo=new ParseInfo(this.ignoreLeadingWhiteSpace);
+    var parsedKeys={};
+
     for (var i = 0; i < text.length; i++) {
-      this.nextFunction(text[i]);
+      this.f=parseInfo.nextFunction;
+      parseInfo=this.f(text[i],parseInfo);
     }
-    this.endOfText();
-    var length=Object.keys(this.parsedKeys).length;
-    var parsed={keys:this.parsedKeys,numberOfKeys:length};
-    return parsed;
+    parseInfo.endOfText(parseInfo,parsedKeys);
+    return parseInfo.parsed();
   },
-  pushKeyValuePair:function() {
-    this.parsedKeys[this.currentKey]=this.currentValue;
-    this.currentKey=this.currentValue="";
-  },
-  parseKey:function(currentChar) {
+  parseKey:function(currentChar,parseInfo) {
     if(isAlphanumeric(currentChar)) {
-      this.currentToken+=currentChar;
-      return this;
+      parseInfo.currentToken+=currentChar;
+      return parseInfo;
     }
     if(isWhiteSpace(currentChar))
-      return this;
+      return parseInfo;
     if(isEqualsCharacter(currentChar)) {
-      this.currentKey=this.currentToken;
-      this.currentToken="";
-      this.nextFunction=this.parseValue;
-      return this;
+      parseInfo.currentKey=parseInfo.currentToken;
+      parseInfo.currentToken="";
+      parseInfo.nextFunction=this.parseValue;
+      return parseInfo;
     } // throw error otherwise
   },
-  parseValue:function(currentChar) {
+  parseValue:function(currentChar,parseInfo) {
     if(isWhiteSpace(currentChar))
-      return this;
+      return parseInfo;
     if(isAlphanumeric(currentChar)) {
-      this.currentValue+=currentChar;
-      this.nextFunction=this.parseValueWithoutQuotes;
-      return this;
+      parseInfo.currentValue+=currentChar;
+      parseInfo.nextFunction=this.parseValueWithoutQuotes;
+      return parseInfo;
     }
     if(isQuote(currentChar)) {
-      this.nextFunction=this.parseValueWithQuotes;
-      return this;
+      parseInfo.nextFunction=this.parseValueWithQuotes;
+      return parseInfo;
     }
   },
-  parseValueWithQuotes:function(currentChar) {
+  parseValueWithQuotes:function(currentChar,parseInfo) {
     if(isQuote(currentChar)) {
-      this.pushKeyValuePair();
-      this.nextFunction=this.ignoreLeadingWhiteSpace;
-      return this;
+      parseInfo.pushKeyValuePair();
+      parseInfo.nextFunction=this.ignoreLeadingWhiteSpace;
+      return parseInfo;
     }
-    this.currentValue+=currentChar;
-    return this;
+    parseInfo.currentValue+=currentChar;
+    return parseInfo;
   },
-  parseValueWithoutQuotes:function(currentChar) {
+  parseValueWithoutQuotes:function(currentChar,parseInfo) {
     if(isWhiteSpace(currentChar)) {
-      this.pushKeyValuePair();
-      this.nextFunction=this.ignoreLeadingWhiteSpace;
-      return this;
+      parseInfo.pushKeyValuePair();
+      parseInfo.nextFunction=this.ignoreLeadingWhiteSpace;
+      return parseInfo;
     }
-    this.currentValue+=currentChar;
-    return this;
+    parseInfo.currentValue+=currentChar;
+    return parseInfo;
   },
-  ignoreLeadingWhiteSpace:function(currentChar) {
+  ignoreLeadingWhiteSpace:function(currentChar,parseInfo) {
     if(isWhiteSpace(currentChar))
-      return this;
+      return parseInfo;
     if(isAlphanumeric(currentChar)) {
-      this.currentToken+=currentChar;
-      this.nextFunction=this.parseKey;
+      parseInfo.currentToken+=currentChar;
+      parseInfo.nextFunction=this.parseKey;
     } // else throw error
-    return this;
+    return parseInfo;
   },
-  endOfText:function() {
-    if(this.currentValue!="") {
-      if(this.currentKey!="")
-        this.pushKeyValuePair();
-      else {
-        //raise error
-      }
-    }
-  }
 }
 
 var isWhiteSpace=function(character) {

@@ -75,6 +75,15 @@ describe("parse digits and other special chars",function(){
     assert.deepEqual(expected,kvParser.parse("__=value"));
   });
 
+  it("parse keys with alphabets and digits(digits leading)",function(){
+    var expected={numberOfKeys:1,keys:{'0abc':"value"}};
+    assert.deepEqual(expected,kvParser.parse("0abc=value"));
+  });
+
+  it("parse keys with alphabets and digits(alphabets leading)",function(){
+    var expected={numberOfKeys:1,keys:{'a0bc':"value"}};
+    assert.deepEqual(expected,kvParser.parse("a0bc=value"));
+  });
 });
 
 describe("multiple keys",function(){
