@@ -13,7 +13,7 @@ describe("parse basic key values",function(){
     var expected={numberOfKeys:0,keys:{}};
     assert.deepEqual(expected,kvParser.parse(""));
   });
-  
+
   it("parse key=value",function(){
     var expected={numberOfKeys:1,keys:{key:"value"}};
     assert.deepEqual(expected,kvParser.parse("key=value"));
@@ -184,5 +184,18 @@ describe("mixed values with both quotes and without",function(){
   it("parse simple values with and without quotes(quoted values first)",function(){
     var expected={numberOfKeys:2,keys:{key:"value",anotherkey:"anothervalue"}};
     assert.deepEqual(expected,kvParser.parse("anotherkey=\"anothervalue\" key=value"));
+  });
+});
+
+describe("error handling",function(){
+  beforeEach(function(){
+    kvParser=new Parser();
+  });
+
+  it("throws error on missing value",function(){
+    assert.throws(
+      () => {
+        kvParser.parse("key=")
+      },Error)
   });
 });

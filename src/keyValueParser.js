@@ -20,8 +20,12 @@ ParseInfo.prototype.endOfText=function() {
     if(this.currentKey!="")
       this.pushKeyValuePair();
     else {
-      //raise error
+      console.log("Did we get here")
+      throw new Error("missing key");
     }
+  } else {
+    if(this.currentKey!="")
+      throw new Error("missing value");
   }
 }
 
@@ -42,7 +46,7 @@ Parser.prototype = {
       this.f=parseInfo.nextFunction;
       parseInfo=this.f(text[i],parseInfo);
     }
-    parseInfo.endOfText(parseInfo,parsedKeys);
+    parseInfo.endOfText();
     return parseInfo.parsed();
   },
   parseKey:function(currentChar,parseInfo) {
