@@ -106,7 +106,9 @@ Parser.prototype = {
     if(isAlphanumeric(currentChar)) {
       parseInfo.currentToken+=currentChar;
       parseInfo.nextFunction=this.parseKey;
-    } // else throw error
+    } else {
+      throw new Error("missing key");
+    }
     return parseInfo;
   },
 }

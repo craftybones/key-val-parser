@@ -205,4 +205,21 @@ describe("error handling",function(){
         kvParser.parse("key=\"value")
       },Error)
   });
+
+  it("throws error on missing key",function(){
+    assert.throws(
+      () => {
+        var p=kvParser.parse("=value");
+        console.log()
+      },Error)
+  });
+
+  it("throws error on invalid key",function(){
+    assert.throws(
+      () => {
+        var p=kvParser.parse("'foo'=value");
+        console.log()
+      },Error)
+  });
+
 });
