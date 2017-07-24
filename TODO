@@ -1,6 +1,7 @@
 * Add support for quoted slashes in values that are quoted
   - ex: name="value with \"quotes\""
 * Allow users to specify valid keys and raise errors on invalid keys.
-* Error handling on invalid formats, missing values, keys etc
+* Extend error object to provide richer messages about errors. Character where error occurred etc.
 * Add a README
 * ADD Examples
+* Investigate npm module pushing
