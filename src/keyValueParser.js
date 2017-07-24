@@ -53,11 +53,7 @@ Parser.prototype = {
     parseInfo.endOfText();
     return parseInfo.parsed();
   },
-  parseKey:function(currentChar,parseInfo) {
-    if(isAlphanumeric(currentChar)) {
-      parseInfo.currentToken+=currentChar;
-      return parseInfo;
-    }
+  parseWhiteSpaceBeforeAssignment:function(currentChar,parseInfo) {
     if(isWhiteSpace(currentChar))
       return parseInfo;
     if(isEqualsCharacter(currentChar)) {
@@ -65,7 +61,25 @@ Parser.prototype = {
       parseInfo.currentToken="";
       parseInfo.nextFunction=this.parseValue;
       return parseInfo;
-    } // throw error otherwise
+    } else {
+      throw new Error("missing assignment operator");
+    }
+  },
+  parseKey:function(currentChar,parseInfo) {
+    if(isAlphanumeric(currentChar)) {
+      parseInfo.currentToken+=currentChar;
+      return parseInfo;
+    }
+    if(isWhiteSpace(currentChar)) {
+      parseInfo.nextFunction=this.parseWhiteSpaceBeforeAssignment;
+      return parseInfo;
+    }
+    if(isEqualsCharacter(currentChar)) {
+      parseInfo.currentKey=parseInfo.currentToken;
+      parseInfo.currentToken="";
+      parseInfo.nextFunction=this.parseValue;
+    }
+    return parseInfo;
   },
   parseValue:function(currentChar,parseInfo) {
     if(isWhiteSpace(currentChar))

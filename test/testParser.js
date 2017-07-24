@@ -210,7 +210,6 @@ describe("error handling",function(){
     assert.throws(
       () => {
         var p=kvParser.parse("=value");
-        console.log()
       },Error)
   });
 
@@ -218,7 +217,13 @@ describe("error handling",function(){
     assert.throws(
       () => {
         var p=kvParser.parse("'foo'=value");
-        console.log()
+      },Error)
+  });
+
+  it("throws error on missing assignment operator",function(){
+    assert.throws(
+      () => {
+        var p=kvParser.parse("key value");
       },Error)
   });
 
