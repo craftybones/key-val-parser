@@ -3,6 +3,7 @@ var ParseInfo=function(initialParsingFunction) {
     this.currentKey="";
     this.currentValue="";
     this.parsedKeys={};
+    this.parseWithQuotes=false;
     this.nextFunction=initialParsingFunction;
 }
 
@@ -17,10 +18,13 @@ ParseInfo.prototype.pushKeyValuePair=function() {
 
 ParseInfo.prototype.endOfText=function() {
   if(this.currentValue!="") {
-    if(this.currentKey!="")
-      this.pushKeyValuePair();
-    else {
-      console.log("Did we get here")
+    if(this.currentKey!="") {
+      if(!this.parseWithQuotes)
+        this.pushKeyValuePair();
+      else {
+        throw new Error("missing end quote");
+      }
+    } else {
       throw new Error("missing key");
     }
   } else {
@@ -72,6 +76,7 @@ Parser.prototype = {
       return parseInfo;
     }
     if(isQuote(currentChar)) {
+      parseInfo.parseWithQuotes=true;
       parseInfo.nextFunction=this.parseValueWithQuotes;
       return parseInfo;
     }
@@ -79,6 +84,7 @@ Parser.prototype = {
   parseValueWithQuotes:function(currentChar,parseInfo) {
     if(isQuote(currentChar)) {
       parseInfo.pushKeyValuePair();
+      parseInfo.parseWithQuotes=false;
       parseInfo.nextFunction=this.ignoreLeadingWhiteSpace;
       return parseInfo;
     }
