@@ -1,6 +1,6 @@
-[![CircleCI](https://circleci.com/gh/craftybones/key-value-parser.svg?style=svg)](https://circleci.com/gh/craftybones/key-value-parser)
+[![CircleCI](https://circleci.com/gh/craftybones/key-val-parser.svg?style=svg)](https://circleci.com/gh/craftybones/key-val-parser)
 
-# key-value-parser
+# key-val-parser
 
 This is a parser written in Javascript that helps parse key value pairs of the format "key1=value1 key2=value2". The resultant value is a JSON object that contains all the keys and their associated values. Additionally values might be quoted to contain sentences or multiple words that are space separated.
 
@@ -34,8 +34,28 @@ These are broadly the cases that it will cover.
 
 I was writing a [Slack](https://slack.com/) app and I had to receive arguments as a series of key value pairs. I shopped around and didn't find a package that suited my needs.
 
+## Installation
+
+`npm install key-val-parser` 
+
 ## Usage
 
-#### Installation
+```javascript
+var Parser=require('key-val-parser');
 
-`npm install key-value-parser` 
+var p=new Parser();
+
+var parsed=p.parse("name=john age=23");
+
+console.log("Number of keys parsed",parsed.numberOfKeys);
+console.log("value of name=",parsed.keys.name);
+console.log("value of age=",parsed.keys.age);
+```
+
+The above code will produce
+
+```
+Number of keys parsed 2
+value of name= john
+value of age= 23
+```
