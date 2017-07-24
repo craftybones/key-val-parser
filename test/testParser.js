@@ -227,4 +227,11 @@ describe("error handling",function(){
       },Error)
   });
 
+  it("throws error on incomplete key value pair",function(){
+    assert.throws(
+      () => {
+        var p=kvParser.parse("key");
+      },Error)
+  });
+
 });

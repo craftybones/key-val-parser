@@ -17,6 +17,9 @@ ParseInfo.prototype.pushKeyValuePair=function() {
 }
 
 ParseInfo.prototype.endOfText=function() {
+  if(this.currentToken!="") {
+    throw new Error("incomplete key value pair");
+  }
   if(this.currentValue!="") {
     if(this.currentKey!="") {
       if(!this.parseWithQuotes)
