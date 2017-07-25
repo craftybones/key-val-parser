@@ -36,9 +36,20 @@ ParseInfo.prototype.endOfText=function() {
   }
 }
 
+var Parsed=function() {
+}
+
+Parsed.prototype.length=function(){
+  return Object.keys(this).length;
+}
+
 ParseInfo.prototype.parsed=function() {
-    var length=Object.keys(this.parsedKeys).length;
-    return {keys:this.parsedKeys,numberOfKeys:length};
+  var parsed = new Parsed();
+  var parsedKeys=this.parsedKeys;
+  Object.keys(parsedKeys).forEach(function(key){
+    parsed[key]=parsedKeys[key];
+  });
+  return parsed;
 }
 
 var Parser=function() {
