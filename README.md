@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/craftybones/key-value-parser.svg?style=shield&circle-token=bf6ce6c20ee055640d93e8272915b7e59482403d)](https://circleci.com/gh/craftybones/key-value-parser)
+[![CircleCI](https://circleci.com/gh/craftybones/key-val-parser.svg?style=shield&circle-token=bf6ce6c20ee055640d93e8272915b7e59482403d)](https://circleci.com/gh/craftybones/key-val-parser)
 
 # key-val-parser
 
