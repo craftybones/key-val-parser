@@ -1,8 +1,7 @@
 const assert=require('assert');
-const Parser=require('../src/keyValueParser.js');
+const Parser=require('../src/keyValueParser.js').Parser;
 
 var kvParser;
-
 
 describe("parse basic key values",function(){
   beforeEach(function(){

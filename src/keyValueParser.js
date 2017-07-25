@@ -1,57 +1,4 @@
-var Parsed=function() {
-}
-
-Parsed.prototype.length=function(){
-  return Object.keys(this).length;
-}
-
-var ParseInfo=function(initialParsingFunction) {
-    this.currentToken="";
-    this.currentKey="";
-    this.currentValue="";
-    this.parsedKeys={};
-    this.parseWithQuotes=false;
-    this.nextFunction=initialParsingFunction;
-}
-
-ParseInfo.prototype.resetKeysAndValues=function() {
-  this.currentKey=this.currentValue=this.currentToken="";
-}
-
-ParseInfo.prototype.pushKeyValuePair=function() {
-  this.parsedKeys[this.currentKey]=this.currentValue;
-  this.resetKeysAndValues();
-}
-
-ParseInfo.prototype.endOfText=function() {
-  if(this.currentToken!="") {
-    throw new Error("incomplete key value pair");
-  }
-  if(this.currentValue!="") {
-    if(this.currentKey!="") {
-      if(!this.parseWithQuotes)
-        this.pushKeyValuePair();
-      else {
-        throw new Error("missing end quote");
-      }
-    } else {
-      throw new Error("missing key");
-    }
-  } else {
-    if(this.currentKey!="")
-      throw new Error("missing value");
-  }
-}
-
-
-ParseInfo.prototype.parsed=function() {
-  var parsed = new Parsed();
-  var parsedKeys=this.parsedKeys;
-  Object.keys(parsedKeys).forEach(function(key){
-    parsed[key]=parsedKeys[key];
-  });
-  return parsed;
-}
+const ParseInfo=require("./parseInfo.js");
 
 var Parser=function() {
 }
@@ -159,4 +106,6 @@ var isEqualsCharacter=function(character) {
   return character=="=";
 }
 
-module.exports=Parser;
+module.exports={
+  Parser:Parser
+};
