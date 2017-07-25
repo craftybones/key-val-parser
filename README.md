@@ -21,9 +21,9 @@ var p=new Parser();
 
 var parsed=p.parse("name=john age=23");
 
-console.log("Number of keys parsed",parsed.numberOfKeys);
-console.log("value of name=",parsed.keys.name);
-console.log("value of age=",parsed.keys.age);
+console.log("Number of keys parsed",parsed.length());
+console.log("value of name=",parsed.name);
+console.log("value of age=",parsed.age);
 ```
 
 The above code will produce
@@ -43,33 +43,31 @@ var p=new Parser();
 
 // Single key
 > p.parse("username=john");
-{ keys: { username: 'john' }, numberOfKeys: 1 }
+Parsed { username: 'john' }
 
 // Multiple keys on the same line separated by whitespace
 > p.parse("username=john age=23");
-{ keys: { username: 'john', age: '23' }, numberOfKeys: 2 }
+Parsed { username: 'john', age: '23' }
 
 // Single key with space between key, assignment operator and value
 > p.parse("username = john");
-{ keys: { username: 'john' }, numberOfKeys: 1 }
+Parsed { username: 'john' }
 
 // Multiple keys with spaces between keys, assignment operator and values
 > p.parse("username = john age = 23");
-{ keys: { username: 'john', age: '23' }, numberOfKeys: 2 }
+Parsed { username: 'john', age: '23' }
 
 // Single key with quoted value
 > p.parse("username=\"John Doe\"");
-{ keys: { username: 'John Doe' }, numberOfKeys: 1 }
+Parsed { username: 'John Doe' }
 
 // Multiple keys with quoted values
 > p.parse("username=\"John Doe\" address=\"No 1 Janpath, New Delhi\"");
-{ keys: { username: 'John Doe', address: 'No 1 Janpath, New Delhi' },
-  numberOfKeys: 2 }
+Parsed { username: 'John Doe', address: 'No 1 Janpath, New Delhi' }
 
 // Multiple keys with both quoted and unquoted values
 > p.parse("username=johndoe address=\"No 1 Janpath, New Delhi\"");
-{ keys: { username: 'johndoe', address: 'No 1 Janpath, New Delhi' },
-  numberOfKeys: 2 }
+Parsed { username: 'johndoe', address: 'No 1 Janpath, New Delhi' }
 
 ```
 
