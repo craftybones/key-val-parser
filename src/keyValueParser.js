@@ -1,3 +1,10 @@
+var Parsed=function() {
+}
+
+Parsed.prototype.length=function(){
+  return Object.keys(this).length;
+}
+
 var ParseInfo=function(initialParsingFunction) {
     this.currentToken="";
     this.currentKey="";
@@ -36,12 +43,6 @@ ParseInfo.prototype.endOfText=function() {
   }
 }
 
-var Parsed=function() {
-}
-
-Parsed.prototype.length=function(){
-  return Object.keys(this).length;
-}
 
 ParseInfo.prototype.parsed=function() {
   var parsed = new Parsed();
