@@ -38,6 +38,9 @@ value of age= 23
 #### Examples
 
 ```javascript
+var Parser=require('key-val-parser');
+var p=new Parser();
+
 // Single key
 p.parse("username=john"); // { keys: { username: 'john' }, numberOfKeys: 1 }
 
@@ -51,13 +54,17 @@ p.parse("username = john"); // { keys: { username: 'john' }, numberOfKeys: 1 }
 p.parse("username = john age = 23"); // { keys: { username: 'john', age: '23' }, numberOfKeys: 2 }
 
 // Single key with quoted value
-p.parse("username=\"John Doe\"");
+p.parse("username=\"John Doe\""); // { keys: { username: 'John Doe' }, numberOfKeys: 1 }
 
 // Multiple keys with quoted values
-p.parse("username="John Doe" address="No 1 Janpath, New Delhi"
+p.parse("username=\"John Doe\" address=\"No 1 Janpath, New Delhi\"");
+// { keys: { username: 'John Doe', address: 'No 1 Janpath, New Delhi' },
+//   numberOfKeys: 2 }
 
-Multiple keys with both quoted and unquoted values
-p.parse("username=johndoe address="No 1 Janpath, New Delhi"
+// Multiple keys with both quoted and unquoted values
+p.parse("username=johndoe address=\"No 1 Janpath, New Delhi\"");
+// { keys: { username: 'johndoe', address: 'No 1 Janpath, New Delhi' },
+//   numberOfKeys: 2 }
 ```
 
 These are broadly the cases that it will cover.
