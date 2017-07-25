@@ -89,3 +89,25 @@ p.parse("username john"); // Error: missing assignment operator
 // Incomplete key value pair
 p.parse("key"); // Error: incomplete key value pair
 ```
+
+#### Unsupported Cases
+
+Keys with spaces
+```javascript
+p.parse("user name=john");
+```
+
+Keys containing non-alphanumeric characters
+```javascript
+p.parse("abc123#$$=john"); // It will simply ignore special characters
+```
+
+Quoted keys
+```javascript
+p.parse("\"user name\"=john");
+```
+
+Quoted values containing nested quotes
+```javascript
+p.parse("quotation=\"she said \"stop!\"\"");
+```
