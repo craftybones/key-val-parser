@@ -1,5 +1,5 @@
 const assert=require('assert');
-const Parser=require('../src/keyValueParser.js').Parser;
+const Parser=require('../src/index.js').Parser;
 
 var kvParser;
 

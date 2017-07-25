@@ -1,14 +1,12 @@
 const assert=require('assert');
-const Parser=require('../src/keyValueParser.js').StrictParser;
-
-var kvParser;
+const StrictParser=require('../src/index.js').StrictParser;
 
 describe("strict parser",function(){
-  it("",function(){
-    beforeEach(function(){
-      kvParser=new StrictParser();
-    });
-
-    // code
+  it("should only parse keys that are specified",function(){
+    let kvParser=new StrictParser(["name"]);
+    assert.throws(
+      () => {
+        var p=kvParser.parse("age=23");
+      },Error)
   });
 });

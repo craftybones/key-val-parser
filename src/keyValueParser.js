@@ -1,11 +1,12 @@
-const ParseInfo=require("./parseInfo.js");
+const parseInfoCreator=require("./parseInfoCreator.js").basic;
 
 var Parser=function() {
+  this.parseInfoCreator=parseInfoCreator;
 }
 
 Parser.prototype = {
   parse:function(text) {
-    var parseInfo=new ParseInfo(this.ignoreLeadingWhiteSpace);
+    var parseInfo=this.parseInfoCreator(this.ignoreLeadingWhiteSpace);
     var parsedKeys={};
 
     for (var i = 0; i < text.length; i++) {
@@ -106,6 +107,4 @@ var isEqualsCharacter=function(character) {
   return character=="=";
 }
 
-module.exports={
-  Parser:Parser
-};
+module.exports=Parser;
