@@ -68,3 +68,24 @@ p.parse("username=johndoe address=\"No 1 Janpath, New Delhi\"");
 ```
 
 These are broadly the cases that it will cover.
+
+#### Error handling
+
+Errors will be thrown if the parser encounters missing keys, values or assignment operators.
+
+```javascript
+var Parser=require('key-val-parser');
+var p=new Parser();
+
+// Missing value
+p.parse("username=");  // Error: missing value
+
+// Missing key
+p.parse("=john"); // Error: missing key
+
+// Missing assignment operator
+p.parse("username john"); // Error: missing assignment operator
+
+// Incomplete key value pair
+p.parse("key"); // Error: incomplete key value pair
+```
