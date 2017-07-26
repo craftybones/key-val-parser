@@ -1,5 +1,14 @@
 const assert=require('assert');
 const StrictParser=require('../src/index.js').StrictParser;
+const InvalidKeyError=require('../src/invalidKeyError.js');
+
+var invalidKeyErrorChecker=function(invalidKey) {
+  return function(err) {
+    if(err instanceof InvalidKeyError && err.invalidKey==invalidKey)
+      return true;
+    return false;
+  }
+}
 
 describe("strict parser",function(){
   it("should only parse keys that are specified for a single key",function(){
@@ -7,7 +16,8 @@ describe("strict parser",function(){
     assert.throws(
       () => {
         var p=kvParser.parse("age=23");
-      },Error)
+      },
+      invalidKeyErrorChecker("age"))
   });
 
   it("should only parse keys that are specified for multiple keys",function(){
@@ -18,6 +28,7 @@ describe("strict parser",function(){
     assert.throws(
       () => {
         var p=kvParser.parse("color=blue");
-      },Error)
+      },
+      invalidKeyErrorChecker("color"))
   });
 });
