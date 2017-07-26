@@ -5,6 +5,7 @@ const assert=require('assert');
 const Parser=require(src('index.js')).Parser;
 const MissingValueError=require(errors('missingValueError.js'));
 const MissingEndQuoteError=require(errors('missingEndQuoteError.js'));
+const MissingKeyError=require(errors('missingKeyError.js'));
 
 var kvParser;
 
@@ -214,7 +215,7 @@ describe("error handling",function(){
       errorChecker("key",3,MissingValueError))
   });
 
-  it("#modified throws error on missing value when value is quoted",function(){
+  it("throws error on missing value when value is quoted",function(){
     assert.throws(
       () => {
         kvParser.parse("key=\"value")
@@ -223,11 +224,13 @@ describe("error handling",function(){
     )
   });
 
-  it("throws error on missing key",function(){
+  it("#modified throws error on missing key",function(){
     assert.throws(
       () => {
         var p=kvParser.parse("=value");
-      },Error)
+      },
+      errorChecker(undefined,0,MissingKeyError)
+    )
   });
 
   it("throws error on invalid key",function(){

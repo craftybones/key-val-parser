@@ -1,4 +1,5 @@
 const parseInfoCreator=require("./parseInfoCreator.js").basic;
+const MissingKeyError=require("./errors/missingKeyError.js");
 
 var Parser=function() {
   this.parseInfoCreator=parseInfoCreator;
@@ -85,7 +86,7 @@ Parser.prototype = {
       parseInfo.currentToken+=currentChar;
       parseInfo.nextFunction=this.parseKey;
     } else {
-      throw new Error("missing key");
+      throw new MissingKeyError(parseInfo.currentPos);
     }
     return parseInfo;
   },
