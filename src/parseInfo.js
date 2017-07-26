@@ -1,6 +1,7 @@
 const Parsed=require("./parsed.js");
 const MissingValueError=require("./errors/missingValueError.js");
 const MissingEndQuoteError=require("./errors/missingEndQuoteError.js");
+const IncompleteKeyValuePairError=require("./errors/incompleteKeyValuePairError.js");
 
 var ParseInfo=function(initialParsingFunction) {
     this.currentToken="";
@@ -27,7 +28,7 @@ ParseInfo.prototype.pushKeyValuePair=function() {
 
 ParseInfo.prototype.endOfText=function() {
   if(this.currentToken!="") {
-    throw new Error("incomplete key value pair");
+    throw new IncompleteKeyValuePairError(this.currentPos);
   }
   if(this.currentValue!="") {
     if(this.currentKey!="") {
