@@ -1,5 +1,6 @@
 const parseInfoCreator=require("./parseInfoCreator.js").basic;
 const MissingKeyError=require("./errors/missingKeyError.js");
+const MissingAssignmentOperatorError=require("./errors/missingAssignmentOperatorError.js");
 
 var Parser=function() {
   this.parseInfoCreator=parseInfoCreator;
@@ -27,7 +28,7 @@ Parser.prototype = {
       parseInfo.nextFunction=this.parseValue;
       return parseInfo;
     } else {
-      throw new Error("missing assignment operator");
+      throw new MissingAssignmentOperatorError(parseInfo.currentPos);
     }
   },
   parseKey:function(currentChar,parseInfo) {

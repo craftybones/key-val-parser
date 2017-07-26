@@ -37,7 +37,7 @@ ParseInfo.prototype.endOfText=function() {
         throw new MissingEndQuoteError(this.currentKey, this.currentPos);
       }
     } else {
-      throw new Error("missing key");
+      throw new MissingKeyError(this.currentPos);
     }
   } else {
     if(this.currentKey!="")
