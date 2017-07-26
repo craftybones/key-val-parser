@@ -31,4 +31,41 @@ describe("strict parser",function(){
       },
       invalidKeyErrorChecker("color"))
   });
+
+  it("should throw an error when one of the keys is not valid",function(){
+    assert.throws(
+      () => {
+        let kvParser=new StrictParser(["name","age"]);
+        kvParser.parse("name=john age=23 color=blue");
+      },
+      invalidKeyErrorChecker("color"))
+  });
+
+  it("should throw an error on invalid key when there are spaces between keys and assignment operators",function(){
+    assert.throws(
+      () => {
+        let kvParser=new StrictParser(["name","age"]);
+        kvParser.parse("color   = blue");
+      },
+      invalidKeyErrorChecker("color"))
+  });
+
+  it("should throw an error on invalid key when there are quotes on values",function(){
+    assert.throws(
+      () => {
+        let kvParser=new StrictParser(["name","age"]);
+        kvParser.parse("color   = \"blue\"");
+      },
+      invalidKeyErrorChecker("color"))
+  });
+
+  it("should throw an error on invalid key when there are cases of both quotes and no quotes",function(){
+    assert.throws(
+      () => {
+        let kvParser=new StrictParser(["name","age"]);
+        kvParser.parse("name = john color   = \"light blue\"");
+      },
+      invalidKeyErrorChecker("color"))
+  });
+
 });
