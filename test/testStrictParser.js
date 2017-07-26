@@ -5,9 +5,9 @@ const assert=require('assert');
 const StrictParser=require(src('index.js')).StrictParser;
 const InvalidKeyError=require(errors('invalidKeyError.js'));
 
-var invalidKeyErrorChecker=function(key) {
+var invalidKeyErrorChecker=function(key,pos) {
   return function(err) {
-    if(err instanceof InvalidKeyError && err.invalidKey==key)
+    if(err instanceof InvalidKeyError && err.invalidKey==key && err.position==pos)
       return true;
     return false;
   }
@@ -20,7 +20,7 @@ describe("strict parser",function(){
       () => {
         var p=kvParser.parse("age=23");
       },
-      invalidKeyErrorChecker("age"))
+      invalidKeyErrorChecker("age",5))
   });
 
   it("should only parse keys that are specified for multiple keys",function(){
@@ -32,16 +32,16 @@ describe("strict parser",function(){
       () => {
         var p=kvParser.parse("color=blue");
       },
-      invalidKeyErrorChecker("color"))
+      invalidKeyErrorChecker("color",9))
   });
 
   it("should throw an error when one of the keys is not valid",function(){
     assert.throws(
       () => {
         let kvParser=new StrictParser(["name","age"]);
-        kvParser.parse("name=john age=23 color=blue");
+        kvParser.parse("name=john color=blue age=23");
       },
-      invalidKeyErrorChecker("color"))
+      invalidKeyErrorChecker("color",20))
   });
 
   it("should throw an error on invalid key when there are spaces between keys and assignment operators",function(){
@@ -50,7 +50,7 @@ describe("strict parser",function(){
         let kvParser=new StrictParser(["name","age"]);
         kvParser.parse("color   = blue");
       },
-      invalidKeyErrorChecker("color"))
+      invalidKeyErrorChecker("color",13))
   });
 
   it("should throw an error on invalid key when there are quotes on values",function(){
@@ -59,7 +59,7 @@ describe("strict parser",function(){
         let kvParser=new StrictParser(["name","age"]);
         kvParser.parse("color   = \"blue\"");
       },
-      invalidKeyErrorChecker("color"))
+      invalidKeyErrorChecker("color",15))
   });
 
   it("should throw an error on invalid key when there are cases of both quotes and no quotes",function(){
@@ -68,7 +68,7 @@ describe("strict parser",function(){
         let kvParser=new StrictParser(["name","age"]);
         kvParser.parse("name = john color   = \"light blue\"");
       },
-      invalidKeyErrorChecker("color"))
+      invalidKeyErrorChecker("color",33))
   });
 
   it("should throw an error when no valid keys are specified",function(){
@@ -77,7 +77,7 @@ describe("strict parser",function(){
         let kvParser=new StrictParser([]);
         kvParser.parse("name=john");
       },
-      invalidKeyErrorChecker("name"))
+      invalidKeyErrorChecker("name",8))
   });
 
   it("should throw an error when no array is passed",function(){
@@ -86,7 +86,7 @@ describe("strict parser",function(){
         let kvParser=new StrictParser();
         kvParser.parse("name=john");
       },
-      invalidKeyErrorChecker("name"))
+      invalidKeyErrorChecker("name",8))
   });
 
 });

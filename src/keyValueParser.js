@@ -11,6 +11,7 @@ Parser.prototype = {
 
     for (var i = 0; i < text.length; i++) {
       this.f=parseInfo.nextFunction;
+      parseInfo.incrementPosition();
       parseInfo=this.f(text[i],parseInfo);
     }
     parseInfo.endOfText();

@@ -7,7 +7,12 @@ var ParseInfo=function(initialParsingFunction) {
     this.currentValue="";
     this.parsedKeys={};
     this.parseWithQuotes=false;
+    this.currentPos=-1;
     this.nextFunction=initialParsingFunction;
+}
+
+ParseInfo.prototype.incrementPosition=function() {
+  this.currentPos++;
 }
 
 ParseInfo.prototype.resetKeysAndValues=function() {

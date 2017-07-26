@@ -17,7 +17,7 @@ StrictParseInfo.prototype=Object.create(ParseInfo.prototype);
 
 StrictParseInfo.prototype.pushKeyValuePair=function() {
   if(!contains(this.validKeys,this.currentKey))
-    throw new InvalidKeyError("invalid key",this.currentKey,0);
+    throw new InvalidKeyError("invalid key",this.currentKey,this.currentPos);
   this.parsedKeys[this.currentKey]=this.currentValue;
   this.resetKeysAndValues();
 }
