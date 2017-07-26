@@ -1,5 +1,6 @@
 const Parsed=require("./parsed.js");
 const MissingValueError=require("./errors/missingValueError.js");
+const MissingEndQuoteError=require("./errors/missingEndQuoteError.js");
 
 var ParseInfo=function(initialParsingFunction) {
     this.currentToken="";
@@ -33,14 +34,14 @@ ParseInfo.prototype.endOfText=function() {
       if(!this.parseWithQuotes)
         this.pushKeyValuePair();
       else {
-        throw new Error("missing end quote");
+        throw new MissingEndQuoteError(this.currentKey, this.currentPos);
       }
     } else {
       throw new Error("missing key");
     }
   } else {
     if(this.currentKey!="")
-      throw new MissingValueError("missing value",this.currentKey,0);
+      throw new MissingValueError(this.currentKey,this.currentPos);
   }
 }
 

@@ -1,11 +1,11 @@
-function MissingValueError(message,key,position) {
-  this.position=position;
+const KeyValueParseError=require("./keyValParseError.js");
+
+function MissingValueError(key,position) {
+  KeyValueParseError.call(this,"Missing value",position);
   this.key=key;
-  this.message=message || "Parse Error";
-  this.stack=(new Error()).stack;
 }
 
-MissingValueError.prototype = Object.create(Error.prototype);
+MissingValueError.prototype = Object.create(KeyValueParseError.prototype);
 MissingValueError.constructor = MissingValueError;
 
 module.exports=MissingValueError;
