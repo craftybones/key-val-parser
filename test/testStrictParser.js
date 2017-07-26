@@ -68,4 +68,22 @@ describe("strict parser",function(){
       invalidKeyErrorChecker("color"))
   });
 
+  it("should throw an error when no valid keys are specified",function(){
+    assert.throws(
+      () => {
+        let kvParser=new StrictParser([]);
+        kvParser.parse("name=john");
+      },
+      invalidKeyErrorChecker("name"))
+  });
+
+  it("should throw an error when no array is passed",function(){
+    assert.throws(
+      () => {
+        let kvParser=new StrictParser();
+        kvParser.parse("name=john");
+      },
+      invalidKeyErrorChecker("name"))
+  });
+
 });
