@@ -1,10 +1,13 @@
-const assert=require('assert');
-const StrictParser=require('../src/index.js').StrictParser;
-const InvalidKeyError=require('../src/invalidKeyError.js');
+const src=function(filePath){return "../src/"+filePath};
+const errors=function(filePath){return "../src/errors/"+filePath};
 
-var invalidKeyErrorChecker=function(invalidKey) {
+const assert=require('assert');
+const StrictParser=require(src('index.js')).StrictParser;
+const InvalidKeyError=require(errors('invalidKeyError.js'));
+
+var invalidKeyErrorChecker=function(key) {
   return function(err) {
-    if(err instanceof InvalidKeyError && err.invalidKey==invalidKey)
+    if(err instanceof InvalidKeyError && err.invalidKey==key)
       return true;
     return false;
   }

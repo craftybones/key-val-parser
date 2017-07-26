@@ -1,5 +1,9 @@
+const src=function(filePath){return "../src/"+filePath};
+const errors=function(filePath){return "../src/errors/"+filePath};
+
 const assert=require('assert');
-const Parser=require('../src/index.js').Parser;
+const Parser=require(src('index.js')).Parser;
+const MissingValueError=require(errors('missingValueError.js'));
 
 var kvParser;
 
@@ -188,6 +192,14 @@ describe("mixed values with both quotes and without",function(){
   });
 });
 
+const missingValueErrorChecker=function(key) {
+    return function(err) {
+      if(err instanceof MissingValueError && err.key==key)
+        return true;
+      return false;
+    }
+}
+
 describe("error handling",function(){
   beforeEach(function(){
     kvParser=new Parser();
@@ -197,7 +209,8 @@ describe("error handling",function(){
     assert.throws(
       () => {
         kvParser.parse("key=")
-      },Error)
+      },
+      missingValueErrorChecker("key"))
   });
 
   it("throws error on missing value when value is quoted",function(){

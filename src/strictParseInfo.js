@@ -1,6 +1,6 @@
 const Parsed=require("./parsed.js");
 const ParseInfo=require("./parseInfo.js");
-const InvalidKeyError=require("./invalidKeyError.js");
+const InvalidKeyError=require("./errors/invalidKeyError.js");
 
 const contains=function(list,key) {
   return list.find(function(validKey){

@@ -1,4 +1,5 @@
 const Parsed=require("./parsed.js");
+const MissingValueError=require("./errors/missingValueError.js");
 
 var ParseInfo=function(initialParsingFunction) {
     this.currentToken="";
@@ -34,7 +35,7 @@ ParseInfo.prototype.endOfText=function() {
     }
   } else {
     if(this.currentKey!="")
-      throw new Error("missing value");
+      throw new MissingValueError("missing value",this.currentKey,0);
   }
 }
 
