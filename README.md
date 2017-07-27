@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/craftybones/key-val-parser.svg?style=shield&circle-token=bf6ce6c20ee055640d93e8272915b7e59482403d)](https://circleci.com/gh/craftybones/key-val-parser)
+[![CircleCI](https://circleci.com/gh/craftybones/key-val-parser.svg?style=shield&circle-token=bf6ce6c20ee055640d93e8272915b7e59482403d)](https://circleci.com/gh/craftybones/key-val-parser) [![npm version](https://badge.fury.io/js/key-val-parser.svg)](https://badge.fury.io/js/key-val-parser) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 # key-val-parser
 
