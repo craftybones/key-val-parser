@@ -37,8 +37,9 @@ value of age= 23
 
 #### Examples
 
+##### Regular Parser
 ```javascript
-var Parser=require('key-val-parser');
+var Parser=require('key-val-parser').Parser;
 var p=new Parser();
 
 // Single key
@@ -72,6 +73,21 @@ Parsed { username: 'johndoe', address: 'No 1 Janpath, New Delhi' }
 ```
 
 These are broadly the cases that it will cover.
+
+##### Strict Parser
+
+There is also a Strict Parser available that allows you to specify valid keys. If the parser encounters an invalid key, it will raise an error. This is useful in cases where you want to whitelist certain options. For example, a config file.
+
+```javascript
+var StrictParser=require('key-val-parser').StrictParser;
+var sp=new StrictParser(["name","age"]);
+
+> sp.parse("name=john age=23 color=blue") // Error: Invalid key
+```
+
+
+_Note: The rest of the parsing stays the same as a regular parser, and it will handle all the cases involving leading spaces, quotes etc._
+
 
 #### Error handling
 
