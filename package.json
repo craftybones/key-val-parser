@@ -1,6 +1,6 @@
 {
   "name": "key-val-parser",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "A parser that parses key value pairs in the form of name=john age=23 address=\"1234 Somewhere\"",
   "main": "src/index.js",
   "dependencies": {},
