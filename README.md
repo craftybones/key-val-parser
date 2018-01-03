@@ -15,7 +15,7 @@ I was writing a [Slack](https://slack.com/) app and I had to receive arguments a
 ## Usage
 
 ```javascript
-var Parser=require('key-val-parser');
+var Parser=require('key-val-parser').Parser;
 
 var p=new Parser();
 
